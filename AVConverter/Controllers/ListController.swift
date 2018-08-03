@@ -1,5 +1,5 @@
 //
-//  FilesViewController.swift
+//  ListController.swift
 //  AVConverter
 //
 //  Created by Utsav Patel on 7/31/18.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FilesViewController: UITableViewController {
+class ListController: UITableViewController {
     var recordingsManager = RecordingsManager()
 
     override func viewDidLoad() {
@@ -18,7 +18,7 @@ class FilesViewController: UITableViewController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "showPlayback") {
-            let playbackVC = segue.destination as! PlaybackViewController
+            let playbackVC = segue.destination as! PlaybackController
 
             let indexPath = tableView.indexPathForSelectedRow
             let audioFile = recordingsManager.getFile(atIndex: indexPath!.row)
@@ -42,6 +42,10 @@ class FilesViewController: UITableViewController {
         return cell
     }
 
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }

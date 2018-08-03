@@ -7,14 +7,13 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Record-->
         <scene sceneID="c94-8C-Q6o">
             <objects>
-                <viewController id="Sqh-iE-Icp" customClass="RecordViewController" customModule="AVConverter" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="Sqh-iE-Icp" customClass="RecorderController" customModule="AVConverter" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="23Y-g5-xuX"/>
                         <viewControllerLayoutGuide type="bottom" id="dkr-nk-ZlO"/>
@@ -23,7 +22,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IZZ-dg-rfa" customClass="WaveformView" customModule="AVConverter" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IZZ-dg-rfa" customClass="WaveView" customModule="AVConverter" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="146" width="375" height="375"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <gestureRecognizers/>
@@ -50,10 +49,17 @@
                             <outletCollection property="gestureRecognizers" destination="U7b-G6-cPv" appends="YES" id="GKS-e6-AcL"/>
                         </connections>
                     </view>
-                    <navigationItem key="navigationItem" title="Record" id="J2P-BU-kdd"/>
+                    <navigationItem key="navigationItem" title="Record" id="J2P-BU-kdd">
+                        <barButtonItem key="rightBarButtonItem" enabled="NO" title="Export" id="fI0-0C-edy">
+                            <connections>
+                                <action selector="exportClicked:" destination="Sqh-iE-Icp" id="I82-EZ-h2z"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
+                        <outlet property="export" destination="fI0-0C-edy" id="Hen-G7-yeV"/>
                         <outlet property="recordLabel" destination="7Jn-kQ-Suf" id="k7v-CE-Www"/>
-                        <outlet property="waveformView" destination="IZZ-dg-rfa" id="yOm-Vs-dNY"/>
+                        <outlet property="waveView" destination="IZZ-dg-rfa" id="yOm-Vs-dNY"/>
                         <segue destination="MyF-Wv-LSi" kind="show" identifier="showPlayback" id="OzA-fH-PC3"/>
                     </connections>
                 </viewController>
@@ -69,7 +75,7 @@
         <!--Recordings-->
         <scene sceneID="Ne7-ar-PiK">
             <objects>
-                <tableViewController clearsSelectionOnViewWillAppear="NO" id="jl2-iS-j0T" customClass="FilesViewController" customModule="AVConverter" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController clearsSelectionOnViewWillAppear="NO" id="jl2-iS-j0T" customClass="ListController" customModule="AVConverter" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="YaB-zs-tPe">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -133,7 +139,7 @@
         <!--Playback-->
         <scene sceneID="spp-Gg-aM3">
             <objects>
-                <viewController id="MyF-Wv-LSi" customClass="PlaybackViewController" customModule="AVConverter" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="MyF-Wv-LSi" customClass="PlaybackController" customModule="AVConverter" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="bei-Ly-ITs"/>
                         <viewControllerLayoutGuide type="bottom" id="vq4-JQ-5bK"/>
@@ -142,49 +148,50 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8zK-hz-J0i">
-                                <rect key="frame" x="0.0" y="623" width="375" height="44"/>
-                                <items>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="soc-iX-wqo"/>
-                                    <barButtonItem systemItem="pause" id="hiG-Gv-cBM">
-                                        <connections>
-                                            <action selector="pauseAction:" destination="MyF-Wv-LSi" id="NqX-ha-CrC"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="HVL-3M-GaA"/>
-                                    <barButtonItem systemItem="play" id="PNl-BC-s6z">
-                                        <connections>
-                                            <action selector="playAction:" destination="MyF-Wv-LSi" id="3U7-Wj-64e"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="qDt-dE-tfN"/>
-                                </items>
-                            </toolbar>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OJs-0x-KU1" customClass="WaveView" customModule="AVConverter" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="146" width="375" height="375"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <gestureRecognizers/>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap to Play" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UFC-Hj-eX6">
+                                <rect key="frame" x="146" y="541" width="84" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.66666666669999997" green="0.66666666669999997" blue="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <gestureRecognizers/>
                         <constraints>
-                            <constraint firstAttribute="centerX" secondItem="8zK-hz-J0i" secondAttribute="centerX" id="3EX-ZP-Jf5"/>
-                            <constraint firstItem="8zK-hz-J0i" firstAttribute="leading" secondItem="9CV-4g-GBk" secondAttribute="leadingMargin" constant="-16" id="64d-w9-Avh"/>
-                            <constraint firstItem="vq4-JQ-5bK" firstAttribute="top" secondItem="8zK-hz-J0i" secondAttribute="bottom" id="XAw-yD-fn7"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="8zK-hz-J0i" secondAttribute="trailing" constant="-16" id="qLF-Ek-uoY"/>
-                            <constraint firstItem="vq4-JQ-5bK" firstAttribute="top" secondItem="8zK-hz-J0i" secondAttribute="bottom" id="wjC-H2-yKu"/>
+                            <constraint firstItem="UFC-Hj-eX6" firstAttribute="top" secondItem="OJs-0x-KU1" secondAttribute="bottom" constant="20" id="2ZS-TN-u6h"/>
+                            <constraint firstItem="OJs-0x-KU1" firstAttribute="width" secondItem="OJs-0x-KU1" secondAttribute="height" multiplier="1:1" id="INs-U5-uFv"/>
+                            <constraint firstItem="OJs-0x-KU1" firstAttribute="leading" secondItem="9CV-4g-GBk" secondAttribute="leading" id="MMQ-fN-Txf"/>
+                            <constraint firstItem="UFC-Hj-eX6" firstAttribute="centerX" secondItem="9CV-4g-GBk" secondAttribute="centerX" id="d34-3c-emn"/>
+                            <constraint firstItem="OJs-0x-KU1" firstAttribute="centerY" secondItem="9CV-4g-GBk" secondAttribute="centerY" id="qUA-w9-bkZ"/>
+                            <constraint firstAttribute="trailing" secondItem="OJs-0x-KU1" secondAttribute="trailing" id="sVS-0f-iI0"/>
                         </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="3EX-ZP-Jf5"/>
-                                <exclude reference="XAw-yD-fn7"/>
-                            </mask>
-                        </variation>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="CbC-aP-77K" appends="YES" id="AFC-wM-eFX"/>
+                        </connections>
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Playback" id="U2d-A5-mZv"/>
+                    <connections>
+                        <outlet property="recordLabel" destination="UFC-Hj-eX6" id="10f-ek-gpd"/>
+                        <outlet property="waveView" destination="OJs-0x-KU1" id="sDV-Hw-mbg"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ibR-RF-KFT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="CbC-aP-77K">
+                    <connections>
+                        <action selector="tapWaveform:" destination="MyF-Wv-LSi" id="qU2-tS-cfx"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="3150" y="-2673"/>
+            <point key="canvasLocation" x="3543" y="-2976"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="OzA-fH-PC3"/>
+        <segue reference="82N-ns-lbd"/>
     </inferredMetricsTieBreakers>
 </document>

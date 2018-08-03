@@ -7,13 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2D23AD42211064190063273F /* WaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D23AD3C211064180063273F /* WaveformView.swift */; };
+		2D23AD42211064190063273F /* WaveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D23AD3C211064180063273F /* WaveView.swift */; };
 		2D23AD43211064190063273F /* RecordingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D23AD3D211064190063273F /* RecordingsManager.swift */; };
-		2D23AD44211064190063273F /* FilesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D23AD3E211064190063273F /* FilesViewController.swift */; };
+		2D23AD44211064190063273F /* ListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D23AD3E211064190063273F /* ListController.swift */; };
 		2D23AD45211064190063273F /* Audio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D23AD3F211064190063273F /* Audio.swift */; };
-		2D23AD46211064190063273F /* PlaybackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D23AD40211064190063273F /* PlaybackViewController.swift */; };
-		2D23AD47211064190063273F /* RecordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D23AD41211064190063273F /* RecordViewController.swift */; };
+		2D23AD46211064190063273F /* PlaybackController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D23AD40211064190063273F /* PlaybackController.swift */; };
+		2D23AD47211064190063273F /* RecorderController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D23AD41211064190063273F /* RecorderController.swift */; };
 		2D23AD4F2110670F0063273F /* ScreenCaptureView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D23AD4D2110670F0063273F /* ScreenCaptureView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		2D23AD7421144A5E0063273F /* Recording.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D23AD7321144A5E0063273F /* Recording.swift */; };
+		2D23AD76211464A30063273F /* VideoCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D23AD75211464A30063273F /* VideoCreator.swift */; };
 		2D29D0A121101F9B006C6FD9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D29D0A021101F9B006C6FD9 /* AppDelegate.swift */; };
 		2D29D0A621101F9B006C6FD9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2D29D0A421101F9B006C6FD9 /* Main.storyboard */; };
 		2D29D0A821101F9C006C6FD9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D29D0A721101F9C006C6FD9 /* Assets.xcassets */; };
@@ -21,15 +23,17 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		2D23AD3C211064180063273F /* WaveformView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaveformView.swift; sourceTree = "<group>"; };
+		2D23AD3C211064180063273F /* WaveView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaveView.swift; sourceTree = "<group>"; };
 		2D23AD3D211064190063273F /* RecordingsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordingsManager.swift; sourceTree = "<group>"; };
-		2D23AD3E211064190063273F /* FilesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilesViewController.swift; sourceTree = "<group>"; };
+		2D23AD3E211064190063273F /* ListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListController.swift; sourceTree = "<group>"; };
 		2D23AD3F211064190063273F /* Audio.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Audio.swift; sourceTree = "<group>"; };
-		2D23AD40211064190063273F /* PlaybackViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaybackViewController.swift; sourceTree = "<group>"; };
-		2D23AD41211064190063273F /* RecordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordViewController.swift; sourceTree = "<group>"; };
+		2D23AD40211064190063273F /* PlaybackController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaybackController.swift; sourceTree = "<group>"; };
+		2D23AD41211064190063273F /* RecorderController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecorderController.swift; sourceTree = "<group>"; };
 		2D23AD4C2110670E0063273F /* AVConverter-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AVConverter-Bridging-Header.h"; sourceTree = "<group>"; };
 		2D23AD4D2110670F0063273F /* ScreenCaptureView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScreenCaptureView.m; sourceTree = "<group>"; };
 		2D23AD4E2110670F0063273F /* ScreenCaptureView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScreenCaptureView.h; sourceTree = "<group>"; };
+		2D23AD7321144A5E0063273F /* Recording.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recording.swift; sourceTree = "<group>"; };
+		2D23AD75211464A30063273F /* VideoCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCreator.swift; sourceTree = "<group>"; };
 		2D29D09D21101F9A006C6FD9 /* AVConverter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AVConverter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D29D0A021101F9B006C6FD9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2D29D0A521101F9B006C6FD9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -60,9 +64,9 @@
 		2D23AD49211066A70063273F /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				2D23AD3E211064190063273F /* FilesViewController.swift */,
-				2D23AD40211064190063273F /* PlaybackViewController.swift */,
-				2D23AD41211064190063273F /* RecordViewController.swift */,
+				2D23AD3E211064190063273F /* ListController.swift */,
+				2D23AD40211064190063273F /* PlaybackController.swift */,
+				2D23AD41211064190063273F /* RecorderController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -70,8 +74,9 @@
 		2D23AD4A211066E90063273F /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				2D23AD502110672E0063273F /* Helpers */,
 				2D23AD3D211064190063273F /* RecordingsManager.swift */,
+				2D23AD75211464A30063273F /* VideoCreator.swift */,
+				2D23AD7321144A5E0063273F /* Recording.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -79,16 +84,9 @@
 		2D23AD4B211066ED0063273F /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				2D23AD3C211064180063273F /* WaveformView.swift */,
+				2D23AD3C211064180063273F /* WaveView.swift */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		2D23AD502110672E0063273F /* Helpers */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Helpers;
 			sourceTree = "<group>";
 		};
 		2D29D09421101F9A006C6FD9 = {
@@ -198,14 +196,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2D23AD76211464A30063273F /* VideoCreator.swift in Sources */,
 				2D23AD45211064190063273F /* Audio.swift in Sources */,
 				2D23AD43211064190063273F /* RecordingsManager.swift in Sources */,
-				2D23AD47211064190063273F /* RecordViewController.swift in Sources */,
-				2D23AD44211064190063273F /* FilesViewController.swift in Sources */,
+				2D23AD47211064190063273F /* RecorderController.swift in Sources */,
+				2D23AD44211064190063273F /* ListController.swift in Sources */,
 				2D29D0A121101F9B006C6FD9 /* AppDelegate.swift in Sources */,
 				2D23AD4F2110670F0063273F /* ScreenCaptureView.m in Sources */,
-				2D23AD46211064190063273F /* PlaybackViewController.swift in Sources */,
-				2D23AD42211064190063273F /* WaveformView.swift in Sources */,
+				2D23AD46211064190063273F /* PlaybackController.swift in Sources */,
+				2D23AD42211064190063273F /* WaveView.swift in Sources */,
+				2D23AD7421144A5E0063273F /* Recording.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -362,7 +362,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "AVConverter/AVConverter-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -382,7 +382,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "AVConverter/AVConverter-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

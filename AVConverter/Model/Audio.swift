@@ -9,6 +9,7 @@
 import Foundation
 
 struct Audio {
+    let name: String
     let url: URL
     let title: String
 }

@@ -22,7 +22,7 @@ class RecordingsManager {
     }
 
     var dirPath: String {
-        return NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+        return FileManager.documentDirectory
     }
 
     var fileList: [String]! {
@@ -40,11 +40,17 @@ class RecordingsManager {
     func getFile(atIndex index: Int) -> Audio {
         let filePath = URL(string: "\(dirPath)/\(fileList[index])")
         let title = fileList[index]
-        return Audio(url: filePath!, title: title)
+        return Audio(name: fileList[index], url: filePath!, title: title)
     }
 
     func deleteFile(atIndex index: Int) {
         let filePath = URL(fileURLWithPath: "\(dirPath)/\(fileList[index])")
         try! FileManager.default.removeItem(at: filePath)
+    }
+}
+
+extension FileManager {
+    static var documentDirectory: String {
+        return NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
     }
 }
