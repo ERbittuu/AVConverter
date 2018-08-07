@@ -9,7 +9,10 @@
 import Foundation
 
 struct Audio {
+    let basePath: String
     let name: String
-    let url: URL
+    let audio: URL
     let title: String
+    
+    let frameCountMax: Int
 }

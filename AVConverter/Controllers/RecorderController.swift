@@ -15,7 +15,9 @@ extension UIColor {
 
 extension Notification.Name {
     static let recordedAudioSaved = Notification.Name("recordedAudio.saved")
+    static let exportSuccess = Notification.Name("recordedAudio.export")
 }
+
 
 class RecorderController: UIViewController {
     
@@ -26,7 +28,7 @@ class RecorderController: UIViewController {
     @IBOutlet weak var export: UIBarButtonItem!
    
     @IBAction func exportClicked(_ sender: UIBarButtonItem) {
-        VideoCreator.shared.exportMovieFor(name: name)
+//        VideoCreator.shared.exportMovieFrom(name: name)
     }
     
     @IBAction func tapWaveform(_ sender: UITapGestureRecognizer) {
@@ -39,6 +41,19 @@ class RecorderController: UIViewController {
             NotificationCenter.default.post(name: .recordedAudioSaved, object: nil)
             export.isEnabled = true
         } else {
+            
+            if Recording.default.useCreateAudio(name: name) {
+                do {
+                    try Recording.default.prepare()
+                    print("Prepare Succeed")
+                } catch (let error) {
+                    print("Error in prepare:" + error.localizedDescription)
+                }
+            } else {
+                print("Something is ongoing...")
+            }
+            
+            waveView.imageName = Recording.default.url.relativePath
             do {
                 try Recording.default.record()
                 waveView.waveColor = UIColor.activeWaveColor
@@ -53,19 +68,7 @@ class RecorderController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         Recording.default.delegate = self
-        
-        if Recording.default.use(urlString: name + ".m4a") {
-            do {
-                try Recording.default.prepare()
-                print("Prepare Succeed")
-            } catch (let error) {
-                print("Error in prepare:" + error.localizedDescription)
-            }
-        } else {
-            print("Something is ongoing...")
-        }
     }
 }
 

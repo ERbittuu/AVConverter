@@ -82,8 +82,8 @@
 	UIImage* background = [UIImage imageWithCGImage: cgImage];
 	CGImageRelease(cgImage);
 	
-    NSString* filename = [NSString stringWithFormat:@"Documents/frame_%d.png", index];
-    NSString* pngPath = [NSHomeDirectory() stringByAppendingPathComponent:filename];
+    NSString* filename = [NSString stringWithFormat:@"/frame_%d.png", index];
+    NSString* pngPath = [self.imageName stringByAppendingPathComponent:filename];
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue, ^{
         [UIImagePNGRepresentation(background) writeToFile: pngPath atomically: YES];

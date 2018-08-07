@@ -38,12 +38,22 @@ public class Recording: NSObject {
     public static let `default` = Recording()
     
     private override init() { }
-    
-    public func use(urlString: String) -> Bool {
+  
+    public func useCreateAudio(name: String) -> Bool {
+//        var name = name
+//        name = name + ".m4a"
         if self.state != .None {
             return false
         }
-        self.url = URL(fileURLWithPath: FileManager.documentDirectory).appendingPathComponent(urlString)
+        self.url = URL(fileURLWithPath: FileManager.documentDirectory).appendingPathComponent(name)
+        return true
+    }
+    
+    public func use(url: URL) -> Bool {
+        if self.state != .None {
+            return false
+        }
+        self.url = url
         return true
     }
     
@@ -58,7 +68,13 @@ public class Recording: NSObject {
             AVSampleRateKey: sampleRate as AnyObject
         ]
         
-        recorder = try AVAudioRecorder(url: url, settings: settings)
+        do {
+            try FileManager.default.createDirectory(atPath: url.path, withIntermediateDirectories: true, attributes: nil)
+        } catch let error as NSError {
+            NSLog("Unable to create directory \(error.debugDescription)")
+        }
+        
+        recorder = try AVAudioRecorder(url: url.appendingPathComponent("audio.m4a"), settings: settings)
         recorder?.prepareToRecord()
         recorder?.delegate = delegate
         recorder?.isMeteringEnabled = true

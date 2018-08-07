@@ -14,6 +14,8 @@ class ListController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(recordedAudioInserted(_:)), name: .recordedAudioSaved, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(exportSuccess(_:)), name: .exportSuccess, object: nil)
+        
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -26,6 +28,13 @@ class ListController: UITableViewController {
         }
     }
 
+    @objc func exportSuccess(_ notification: Notification) {
+        let alertController = UIAlertController(title: "Your video was successfully saved", message: nil, preferredStyle: .alert)
+        let defaultAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alertController.addAction(defaultAction)
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
     @objc func recordedAudioInserted(_ notification: Notification) {
         tableView.reloadData()
     }
@@ -50,10 +59,31 @@ class ListController: UITableViewController {
         return true
     }
 
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            recordingsManager.deleteFile(atIndex: indexPath.row)
+//    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+//        if editingStyle == .delete {
+//            recordingsManager.deleteFile(atIndex: indexPath.row)
+//            tableView.deleteRows(at: [indexPath], with: .fade)
+//        }
+//
+//        if editingStyle == .delete {
+//            recordingsManager.deleteFile(atIndex: indexPath.row)
+//            tableView.deleteRows(at: [indexPath], with: .fade)
+//        }
+//    }
+    
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
+            self.recordingsManager.deleteFile(atIndex: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
+        
+        let export = UITableViewRowAction(style: .normal, title: "Export") { (action, indexPath) in
+            let audio = self.recordingsManager.getFile(atIndex: indexPath.row)
+            VideoCreator.shared.exportMovieFrom(name: audio)
+        }
+        
+        export.backgroundColor = UIColor.blue
+        
+        return [delete, export]
     }
 }

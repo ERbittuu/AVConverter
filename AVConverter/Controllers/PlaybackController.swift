@@ -21,7 +21,7 @@ class PlaybackController: UIViewController {
         title = recordedAudio.title
         Recording.default.delegate = self
         
-        if !Recording.default.use(urlString: recordedAudio.name) {
+        if !Recording.default.use(url: recordedAudio.audio) {
             print("Something is ongoing...")
         }
     }

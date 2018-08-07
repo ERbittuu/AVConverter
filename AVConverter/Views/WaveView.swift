@@ -86,7 +86,7 @@ public class WaveView: ScreenCaptureView {
         }
         
         if capture {
-//            super.draw(rect)
+            super.draw(rect)
         }
     }
 }
