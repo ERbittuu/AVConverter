@@ -15,8 +15,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        let w = min(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height)
-        VideoCreator.videoSize = CGSize(width: w, height: w)
         return true
     }
 

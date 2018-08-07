@@ -21,25 +21,24 @@ extension Notification.Name {
 
 class RecorderController: UIViewController {
     
-    var name: String = String.randomName()
+    var name: String = String.nameWithTime()
     @IBOutlet weak var recordLabel: UILabel!
     @IBOutlet weak var waveView: WaveView!
     
-    @IBOutlet weak var export: UIBarButtonItem!
-   
-    @IBAction func exportClicked(_ sender: UIBarButtonItem) {
-//        VideoCreator.shared.exportMovieFrom(name: name)
-    }
-    
+    var done: Bool = false
+
     @IBAction func tapWaveform(_ sender: UITapGestureRecognizer) {
+        if done {
+            return
+        }
         
         if Recording.default.state == .Record {
             Recording.default.stop()
             waveView.capture = false
             print("Recording saved")
-            recordLabel.text = "Recorded.. You can Export it."
+            recordLabel.text = "Recorded.. You can Export it from recording list."
             NotificationCenter.default.post(name: .recordedAudioSaved, object: nil)
-            export.isEnabled = true
+            self.done = true
         } else {
             
             if Recording.default.useCreateAudio(name: name) {

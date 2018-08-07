@@ -44,7 +44,13 @@ class RecordingsManager {
             print("Error while enumerating files \(basePath.path): \(error.localizedDescription)")
         }
         
-        return Audio(basePath: basePath.absoluteString, name: title, audio: basePath.appendingPathComponent("audio.m4a") , title: title, frameCountMax: count)
+        let date = Date(timeIntervalSince1970: TimeInterval(title) ?? 0)
+        let formater = DateFormatter()
+        formater.dateStyle = .medium
+        formater.timeStyle = .short
+        let name = "Recording: \(formater.string(from: date))"
+        
+        return Audio(basePath: basePath.absoluteString, name: title, audio: basePath.appendingPathComponent("audio.m4a") , title: name, frameCountMax: count)
     }
 
     func deleteFile(atIndex index: Int) {

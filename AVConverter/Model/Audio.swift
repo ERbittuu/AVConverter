@@ -15,4 +15,9 @@ struct Audio {
     let title: String
     
     let frameCountMax: Int
+    
+    func videoAvailable() -> Bool {
+        let url = URL(string: basePath)!
+        return FileManager.default.fileExists(atPath: url.appendingPathComponent("finalVideo.mp4").relativePath)
+    }
 }

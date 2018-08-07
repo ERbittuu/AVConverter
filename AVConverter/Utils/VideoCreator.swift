@@ -17,17 +17,81 @@ class VideoCreator {
     public static var videoSize: CGSize = CGSize.zero
     public static var fps: Int32 = 30
     
+    func accessGranted(completion: @escaping ((Bool) -> ()))  {
+        let status = PHPhotoLibrary.authorizationStatus()
+        
+        if (status == .authorized) {
+            // Access has been granted.
+            completion(true)
+        }
+            
+        else if (status == .denied) {
+            // Access has been denied.
+            completion(false)
+        }
+            
+        else if (status == .notDetermined) {
+            
+            // Access has not been determined.
+            PHPhotoLibrary.requestAuthorization { (_status) in
+                if (_status == .authorized) {
+                    // Access has been granted.
+                    completion(true)
+                }
+                else {
+                    // Access has been denied.
+                    completion(false)
+                }
+            }
+        }
+            
+        else if (status == .restricted) {
+            // Restricted access - normally won't happen.
+            completion(false)
+        }
+    }
+    
     func exportMovieFrom(name: Audio) {
+        
+        if name.videoAvailable() {
+            
+            let url = URL(string: name.basePath)!
+            
+            PHPhotoLibrary.shared().performChanges({
+                PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url.appendingPathComponent("finalVideo.mp4"))
+            }) { saved, error in
+                if saved {
+                    NotificationCenter.default.post(name: .exportSuccess, object: nil)
+                }
+            }
+            
+            return
+        }
+        
         print("Export Clicked")
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
         print("Start Exporting...")
             
         let videoURL = URL(string: name.basePath)?.appendingPathComponent("video.mp4")
-            self.writeImagesAsMovie(audio: name, videoURL: videoURL!, videoSize:  VideoCreator.videoSize, videoFPS: VideoCreator.fps)
+            self.writeImagesAsMovie(audio: name, videoURL: videoURL!, videoFPS: VideoCreator.fps)
         }
     }
     
-    func writeImagesAsMovie(audio: Audio, videoURL: URL, videoSize: CGSize, videoFPS: Int32) {
+    func writeImagesAsMovie(audio: Audio, videoURL: URL, videoFPS: Int32) {
+        
+        let url = URL(string: audio.basePath)!
+        
+        let _urlx = url.appendingPathComponent("/frame_0.png")
+        let imgTemp = UIImage(contentsOfFile: _urlx.relativePath)!
+        
+        let videoSize: CGSize = imgTemp.size
+        
+        
+        let audioAsset = AVAsset(url: audio.audio)
+        let time = audioAsset.duration
+        var videoFPS = Float64(videoFPS)
+        videoFPS = Float64(audio.frameCountMax) / CMTimeGetSeconds(time)
+        
         // Create AVAssetWriter to write video
         guard let assetWriter = createAssetWriter(url: videoURL, size: videoSize) else {
             print("Error converting images to video: AVAssetWriter not created")
@@ -54,14 +118,6 @@ class VideoCreator {
         // -- Create queue for <requestMediaDataWhenReadyOnQueue>
         let mediaQueue = DispatchQueue.init(label: "mediaInputQueue")
 
-        let audioAsset = AVAsset(url: audio.audio)
-        // Get audio track
-        
-        let time = audioAsset.duration
-        
-        var videoFPS = Float64(videoFPS)
-        videoFPS = Float64(audio.frameCountMax) / CMTimeGetSeconds(time)
-        
         // -- Set video parameters
         let frameDuration = CMTimeMake(1, Int32(videoFPS))
         var frameCount = 0
@@ -69,7 +125,6 @@ class VideoCreator {
         // -- Add images to video
         let numImages = audio.frameCountMax
         
-        let url = URL(string: audio.basePath)!
 //            ?.appendingPathComponent("video.mp4")
 //        NSString* filename = [NSString stringWithFormat:@"/frame_%d.png", index];
 
@@ -95,7 +150,7 @@ class VideoCreator {
                     if assetWriter.error != nil {
                         print("Error converting images to video: \(assetWriter.error?.localizedDescription ?? "")")
                     } else {
-                        self.addVideoAndAudio(videoURL: videoURL, and: audio.audio)
+                        self.addVideoAndAudio(videoURL: videoURL, and: audio.audio, file: audio)
                         print("Converted images to movie @ \(videoURL)")
                     }
                 }
@@ -189,26 +244,42 @@ class VideoCreator {
 //
 //    // MARK: - Save Video -
 //
-    func addVideoAndAudio(videoURL: URL,and audioURL : URL) {
+    func addVideoAndAudio(videoURL: URL,and audioURL : URL, file: Audio) {
 
         let videoAsset = AVAsset(url: videoURL)
         let audioAsset = AVAsset(url: audioURL)
 
-        KVVideoManager.shared.merge(video: videoAsset,
-                                    withBackgroundMusic: audioAsset) { (url, error) in
+        KVVideoManager.shared.merge(video: videoAsset, withBackgroundMusic: audioAsset, file: file) { (url, error) in
             print("-- - - - - -- -- - --  - --- - -- - --  - -  -- - - -")
             print(url ?? error ?? "both")
-                                        
-                                        if let _url = url {
-                                            PHPhotoLibrary.shared().performChanges({
-                                                PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: _url)
-                                            }) { saved, error in
-                                                if saved {
-                                                    NotificationCenter.default.post(name: .exportSuccess, object: nil)
-                                                }
-                                            }
-                                        }
-                                        
+            if let _url = url {
+                
+                let url = URL(string: file.basePath)!
+                let _urlVideoTemp = url.appendingPathComponent("video.mp4")
+                
+                let fileManager = FileManager.default
+                
+                fileManager.removeItemIfExisted(_urlVideoTemp)
+                
+                do {
+                    let fileURLs = try fileManager.contentsOfDirectory(at: url, includingPropertiesForKeys: nil)
+
+                    for fileUrl in fileURLs {
+                        if fileUrl.pathExtension == "png" {
+                            fileManager.removeItemIfExisted(fileUrl)
+                        }
+                    }
+                } catch { }
+                
+                
+                PHPhotoLibrary.shared().performChanges({
+                    PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: _url)
+                }) { saved, error in
+                    if saved {
+                        NotificationCenter.default.post(name: .exportSuccess, object: nil)
+                    }
+                }
+            }
             print("-- - - - - -- -- - --  - --- - -- - --  - -  -- - - -")
         }
     }
@@ -225,25 +296,11 @@ class KVVideoManager: NSObject {
     let defaultSize = CGSize(width: 1920, height: 1080) // Default video size
 
     typealias Completion = (URL?, Error?) -> Void
-
-    //
-    // Merge array videos
-    //
-    func merge(arrayVideos:[AVAsset], completion:@escaping Completion) -> Void {
-        doMerge(arrayVideos: arrayVideos, animation: false, completion: completion)
-    }
-
-    //
-    // Merge array videos with transition animation
-    //
-    func mergeWithAnimation(arrayVideos:[AVAsset], completion:@escaping Completion) -> Void {
-        doMerge(arrayVideos: arrayVideos, animation: true, completion: completion)
-    }
-
+    
     //
     // Add background music to video
     //
-    func merge(video:AVAsset, withBackgroundMusic music:AVAsset, completion:@escaping Completion) -> Void {
+    func merge(video:AVAsset, withBackgroundMusic music:AVAsset, file: Audio , completion:@escaping Completion) -> Void {
         // Init composition
         let mixComposition = AVMutableComposition.init()
 
@@ -306,9 +363,9 @@ class KVVideoManager: NSObject {
         layerComposition.frameDuration = CMTimeMake(1, 30)
         layerComposition.renderSize = outputSize
 
-        let fileName = "mergedVideo"
-        let DocumentDirURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-        let exportURL = DocumentDirURL.appendingPathComponent(fileName).appendingPathExtension("mp4")
+        let _url = URL(string: file.basePath)!
+        
+        let exportURL = _url.appendingPathComponent("finalVideo.mp4")
 
         // Check exist and remove old file
         FileManager.default.removeItemIfExisted(exportURL)
@@ -573,14 +630,7 @@ extension FileManager {
 
 extension String {
     
-    static func randomName(length: Int = 12) -> String {
-        let base = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-        var randomString: String = ""
-        
-        for _ in 0..<length {
-            let randomValue = arc4random_uniform(UInt32(base.count))
-            randomString += "\(base[base.index(base.startIndex, offsetBy: Int(randomValue))])"
-        }
-        return randomString
+    static func nameWithTime() -> String {
+        return "\(Date().timeIntervalSince1970)"
     }
 }
