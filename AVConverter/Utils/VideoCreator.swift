@@ -53,22 +53,11 @@ class VideoCreator {
     
     func exportMovieFrom(name: Audio) {
         
-        if name.videoAvailable() {
-            
-            let url = URL(string: name.basePath)!
-            
-            PHPhotoLibrary.shared().performChanges({
-                PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url.appendingPathComponent("finalVideo.mp4"))
-            }) { saved, error in
-                if saved {
-                    NotificationCenter.default.post(name: .exportSuccess, object: nil)
-                }
-            }
-            
-            return
-        }
-        
+    
         print("Export Clicked")
+        // Ask for photo
+        
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
         print("Start Exporting...")
             

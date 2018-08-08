@@ -8,6 +8,7 @@
 
 import UIKit
 import AVFoundation
+import Photos
 
 class ListController: UITableViewController {
     var recordingsManager = RecordingsManager()
@@ -42,11 +43,14 @@ class ListController: UITableViewController {
     }
 
     @objc func exportSuccess(_ notification: Notification) {
+        
         DispatchQueue.main.async {
+            HUD.dismiss()
             let alertController = UIAlertController(title: "Your video was successfully saved", message: nil, preferredStyle: .alert)
             let defaultAction = UIAlertAction(title: "OK", style: .default, handler: nil)
             alertController.addAction(defaultAction)
             self.present(alertController, animated: true, completion: nil)
+            NotificationCenter.default.post(name: .recordedAudioSaved, object: nil)
         }
     }
     
@@ -82,11 +86,83 @@ class ListController: UITableViewController {
         }
         
         let export = UITableViewRowAction(style: .normal, title: "Export") { (action, indexPath) in
+            
             let audio = self.recordingsManager.getFile(atIndex: indexPath.row)
             
             VideoCreator.shared.accessGranted(completion: { (granted) in
                 if granted {
-                    VideoCreator.shared.exportMovieFrom(name: audio)
+                    
+                    if audio.videoAvailable() {
+                        let url = URL(string: audio.basePath)!
+                        
+                        PHPhotoLibrary.shared().performChanges({
+                            PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url.appendingPathComponent("finalVideo.mp4"))
+                        }) { saved, error in
+                            if saved {
+                                NotificationCenter.default.post(name: .exportSuccess, object: nil)
+                            }
+                        }
+                        return
+                    }
+
+                    @discardableResult
+                    func saveImage(image: UIImage,url : URL) -> Bool {
+                        guard let data = UIImagePNGRepresentation(image) else {
+                            return false
+                        }
+
+                        do {
+                            try data.write(to: url)
+                            return true
+                        } catch {
+                            print(error.localizedDescription)
+                            return false
+                        }
+                    }
+                    
+                    
+                    let alertController = UIAlertController(title: "Export", message: "Do you want to add cover image on video?", preferredStyle: .alert)
+                    
+                    alertController.addAction(UIAlertAction(title: "Open photo gallery", style: .default, handler: { (_) in
+                        self.getImage(completion: { (image) in
+                            
+                            HUD.show(text: "Exporting video...")
+                            let url = URL(string: audio.basePath)!
+                            
+                            if audio.frameCountMax > 0 {
+                                let _url0 = url.appendingPathComponent("/frame_0.png")
+                                let img0 = UIImage(contentsOfFile: _url0.relativePath)!
+                                let sizeX = img0.size
+                                
+                                if audio.frameCountMax > 30 {
+                                    
+                                    for i in 0 ..< 30 {
+                                        let _url = url.appendingPathComponent("/frame_\(i).png")
+                                        FileManager.default.removeItemIfExisted(_url)
+                                        let newImage = image.resizeImage(targetSize: sizeX)
+                                        saveImage(image: newImage, url: _url)
+                                    }
+                                    
+                                }else {
+                                    for i in 0 ..< audio.frameCountMax {
+                                        let _url = url.appendingPathComponent("/frame_\(i).png")
+                                        FileManager.default.removeItemIfExisted(_url)
+                                        let newImage = image.resizeImage(targetSize: sizeX)
+                                        saveImage(image: newImage, url: _url)
+                                    }
+                                }
+                            }
+                            
+                            VideoCreator.shared.exportMovieFrom(name: audio)
+                        })
+                    }))
+                    
+                    alertController.addAction(UIAlertAction(title: "Direct Export", style: .default, handler: { (_) in
+                        HUD.show(text: "Exporting video...")
+                        VideoCreator.shared.exportMovieFrom(name: audio)
+                    }))
+                    
+                    self.present(alertController, animated: true, completion: nil)
                 }else {
                     let alertController = UIAlertController(title: "Please allow photo permission from settings", message: nil, preferredStyle: .alert)
                     let defaultAction = UIAlertAction(title: "OK", style: .default, handler: nil)
@@ -102,4 +178,78 @@ class ListController: UITableViewController {
         return [delete, export]
     }
     
+    let imagePicker = UIImagePickerController()
+    var returnClouser: ((UIImage) -> ())? = nil
+
+    func getImage(completion: @escaping ((UIImage) -> ())) {
+
+        imagePicker.delegate = self
+
+        imagePicker.allowsEditing = true
+        imagePicker.sourceType = .photoLibrary
+        returnClouser = completion
+        present(imagePicker, animated: true, completion: nil)
+    }
+}
+
+extension ListController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    // MARK: - ImagePicker Delegate
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        
+        if let pickedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
+            returnClouser!(pickedImage)
+        }
+        
+        /*
+         
+         Swift Dictionary named “info”.
+         We have to unpack it from there with a key asking for what media information we want.
+         We just want the image, so that is what we ask for.  For reference, the available options are:
+         
+         UIImagePickerControllerMediaType
+         UIImagePickerControllerOriginalImage
+         UIImagePickerControllerEditedImage
+         UIImagePickerControllerCropRect
+         UIImagePickerControllerMediaURL
+         UIImagePickerControllerReferenceURL
+         UIImagePickerControllerMediaMetadata
+         
+         */
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion:nil)
+    }
+}
+
+
+extension UIImage {
+    
+    func resizeImage(targetSize: CGSize) -> UIImage {
+        let size = self.size
+        
+        let widthRatio  = targetSize.width  / size.width
+        let heightRatio = targetSize.height / size.height
+        
+        // Figure out what our orientation is, and use that to form the rectangle
+        var newSize: CGSize
+        if(widthRatio > heightRatio) {
+            newSize = CGSize(width: size.width * heightRatio, height: size.height * heightRatio)
+        } else {
+            newSize = CGSize(width: size.width * widthRatio,  height: size.height * widthRatio)
+        }
+        
+        // This is the rect that we've calculated out and this is what is actually used below
+        let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
+        
+        // Actually do the resizing to the rect using the ImageContext stuff
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
+        self.draw(in: rect)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return newImage!
+    }
 }

@@ -20,6 +20,7 @@
 		2D29D0A621101F9B006C6FD9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2D29D0A421101F9B006C6FD9 /* Main.storyboard */; };
 		2D29D0A821101F9C006C6FD9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D29D0A721101F9C006C6FD9 /* Assets.xcassets */; };
 		2D29D0AB21101F9C006C6FD9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2D29D0A921101F9C006C6FD9 /* LaunchScreen.storyboard */; };
+		2DBE9E56211ABFBC0002C433 /* HUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBE9E55211ABFBC0002C433 /* HUD.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,7 @@
 		2D29D0A721101F9C006C6FD9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2D29D0AA21101F9C006C6FD9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2D29D0AC21101F9C006C6FD9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2DBE9E55211ABFBC0002C433 /* HUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HUD.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +79,7 @@
 				2D23AD3D211064190063273F /* RecordingsManager.swift */,
 				2D23AD75211464A30063273F /* VideoCreator.swift */,
 				2D23AD7321144A5E0063273F /* Recording.swift */,
+				2DBE9E55211ABFBC0002C433 /* HUD.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -202,6 +205,7 @@
 				2D23AD47211064190063273F /* RecorderController.swift in Sources */,
 				2D23AD44211064190063273F /* ListController.swift in Sources */,
 				2D29D0A121101F9B006C6FD9 /* AppDelegate.swift in Sources */,
+				2DBE9E56211ABFBC0002C433 /* HUD.swift in Sources */,
 				2D23AD4F2110670F0063273F /* ScreenCaptureView.m in Sources */,
 				2D23AD46211064190063273F /* PlaybackController.swift in Sources */,
 				2D23AD42211064190063273F /* WaveView.swift in Sources */,
