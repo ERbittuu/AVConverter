@@ -10,7 +10,8 @@ import UIKit
 import AVFoundation
 
 extension UIColor {
-    static let activeWaveColor = UIColor(red:0.928, green:0.103, blue:0.176, alpha:1)
+    static let activeWaveColor = UIColor(red:12.0 / 255.0, green:155.0 / 255.0, blue:255.0 / 255.0, alpha:1)
+//    static let activeWaveColor = UIColor(red:0.928, green:0.103, blue:0.176, alpha:1)
 }
 
 extension Notification.Name {
@@ -68,6 +69,7 @@ class RecorderController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         Recording.default.delegate = self
+        waveView.waveColor = UIColor.activeWaveColor
     }
 }
 

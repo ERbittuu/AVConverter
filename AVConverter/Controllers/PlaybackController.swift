@@ -20,7 +20,8 @@ class PlaybackController: UIViewController {
         
         title = recordedAudio.title
         Recording.default.delegate = self
-        
+        waveView.waveColor = UIColor.activeWaveColor
+
         if !Recording.default.use(url: recordedAudio.audio) {
             print("Something is ongoing...")
         }
